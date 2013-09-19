@@ -1,0 +1,5 @@
+curl -O http://archive.routeviews.org/bgpdata/2013.09/UPDATES/updates.20130901.0[0-2][00-45:15].bz2
+
+
+
+cat 20130901/updates.20130901.0*.parsed | grep 13030 | grep "|W|" | wc -l
