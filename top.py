@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argparse
+import sys
 import operator
 import subprocess
 import glob
@@ -10,45 +10,42 @@ def inverse(x):
     return 1.0 / x
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input_date")
-    args = parser.parse_args()
-    print("Analyzing", args.input_date)
-    
     total = {}
     announcements = {}
     withdrawals = {}
-    date = args.input_date
-    show = 5
+    show = 10
     
-    print(">> Parsing updates")
-    for update_file in glob.glob(date+"/*.bz2"):
-        print(update_file+".parsed")
-        # Check if file is already parsed
-        try:
-            with open(update_file+".parsed"): pass
-        except IOError:
-            subprocess.call(["bgpdump", "-m", update_file, "-O", update_file+".parsed"])
-        input_file = open(update_file+".parsed", "r").read()
+    for date in sys.argv:
+        if date != sys.argv[0]:
+            print(">> Parsing updates")
+            for update_file in glob.glob(date+"/*.bz2"):
+                print(update_file+".parsed")
+                # Check if file is already parsed
+                try:
+                    with open(update_file+".parsed"): pass
+                except IOError:
+                    subprocess.call(["bgpdump", "-m", update_file, "-O", update_file+".parsed"])
+                input_file = open(update_file+".parsed", "r").read()
 
-        # Count updates in file
-        for message in input_file.splitlines():
-            fields = message.strip().split("|")
-            if fields[4] in total:
-                total[fields[4]] += 1
-            else:
-                total[fields[4]] = 1
-            if fields[2] == "A":
-                if fields[4] in announcements:
-                    announcements[fields[4]] += 1
-                else:
-                    announcements[fields[4]] = 1
-            elif fields[2] == "W":
-                if fields[4] in withdrawals:
-                    withdrawals[fields[4]] += 1
-                else:
-                    withdrawals[fields[4]] = 1
-    print(">> Parsing finished")
+                # Count updates in file
+                for message in input_file.splitlines():
+                    fields = message.strip().split("|")
+                    if fields[4] in total:
+                        total[fields[4]] += 1
+                    else:
+                        total[fields[4]] = 1
+                    if fields[2] == "A":
+                        if fields[4] in announcements:
+                            announcements[fields[4]] += 1
+                        else:
+                            announcements[fields[4]] = 1
+                    elif fields[2] == "W":
+                        if fields[4] in withdrawals:
+                            withdrawals[fields[4]] += 1
+                        else:
+                            withdrawals[fields[4]] = 1
+            print(">> Parsing finished")
+
     
     top_talkers = sorted(total.items(), key=lambda x:x[1], reverse=True)
     top_announcements = sorted(announcements.items(), key=lambda x:x[1], reverse=True)
