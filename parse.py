@@ -1,5 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
+import codecs
 import sys
 import operator
 import subprocess
@@ -8,8 +9,9 @@ import os
 from collections import defaultdict
 
 def main():
-    top_n = 100
+    top_n = 1000
     directories = []
+    enc='iso-8859-15'
     
     for arg in sys.argv:
         if arg != sys.argv[0]:
@@ -39,24 +41,29 @@ def main():
                     try:
                         with open(update_file+".parsed"): pass
                     except IOError:
-                        subprocess.call(["bgpdump", "-m", update_file, "-O", update_file+".parsed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    input_file = open(update_file+".parsed", "r")
-
+                        subprocess.call(["../libbgpdump-1.4.99.13/bgpdump", "-m", update_file, "-O", update_file+".parsed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    input_file = codecs.open(update_file+".parsed", "r", encoding=enc)
+                    
                     for message in input_file:
+                        printable = True
                         fields = message.strip().split("|")
-                        peer_updates[fields[4]] += 1
-                        if fields[2] == "A":
-                            peer_announcements[fields[4]] += 1
-                            as_path = fields[6].strip().split(" ")
-                            origin_announcements[as_path[-1]] += 1
-                            as_paths[fields[6]] += 1
-                            prefixes[fields[5]] += 1
-                            as_path_prefix = "%s:%s" % (fields[6], fields[5])
-                            as_paths_prefixes[as_path_prefix] += 1
-                        elif fields[2] == "W":
-                            peer_withdrawals[fields[4]] += 1
+                        for i in range(0, len(fields)):
+                            if not fields[i].isprintable():
+                                printable = False
+                        if printable == True and len(fields) > 4:
+                            peer_updates[fields[4]] += 1
+                            if fields[2] == "A" and len(fields) > 6:
+                                peer_announcements[fields[4]] += 1
+                                as_path = fields[6].strip().split(" ")
+                                origin_announcements[as_path[-1]] += 1
+                                as_paths[fields[6]] += 1
+                                prefixes[fields[5]] += 1
+                                as_path_prefix = "%s:%s" % (fields[6], fields[5])
+                                as_paths_prefixes[as_path_prefix] += 1
+                            elif fields[2] == "W":
+                                peer_withdrawals[fields[4]] += 1
                     input_file.close()
-            
+
             if not not peer_updates and not not peer_announcements and not not peer_withdrawals:
                 filename = directory+"/graph_data/"+os.path.basename(root)+".graph"
                 print(">> Writing to: %s" % filename)
@@ -65,7 +72,7 @@ def main():
                 except OSError:
                     if not os.path.isdir(directory+"/graph_data"):
                         raise
-                output_file = open(filename, "w+")
+                output_file = open(filename, "w", encoding=enc)
                 
                 top_peer_updates = sorted(peer_updates.items(), key=lambda x:x[1], reverse=True)
                 top_peer_announcements = sorted(peer_announcements.items(), key=lambda x:x[1], reverse=True)
@@ -84,7 +91,7 @@ def main():
                 for x in range(0, len(top_peer_withdrawals)):
                     output_file.write("peer_withdrawal|%s|%s\n" % (str(top_peer_withdrawals[x][0]), str(top_peer_withdrawals[x][1])))
                 output_file.write("total_peer_withdrawals|%s\n" % sum(peer_withdrawals.values()))
-                for x in range(0, top_n):
+                for x in range(0, len(top_origin_announcements)):
                     output_file.write("origin_announcement|%s|%s\n" % (str(top_origin_announcements[x][0]), str(top_origin_announcements[x][1])))
                 output_file.write("total_origin_announcements|%s\n" % sum(origin_announcements.values()))
                 for x in range(0, top_n):
