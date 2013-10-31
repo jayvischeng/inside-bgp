@@ -132,7 +132,7 @@ def main():
             percentage = (100/total_prefixes)*int(top_prefixes[x][1])
             print("%02d. Amount: %s (%.2f%%)\tPrefix: %s" % (x+1, top_prefixes[x][1], percentage, top_prefixes[x][0]), end='\t\t')
             percentage = (int(top_prefixes_counter[x][1])/file_counter)*100
-            print("%02d. AS: %s\tDays: %s (%.2f%%)" % (x+1, top_prefixes_counter[x][0], top_prefixes_counter[x][1], percentage))
+            print("%02d. Prefix: %s\tDays: %s (%.2f%%)" % (x+1, top_prefixes_counter[x][0], top_prefixes_counter[x][1], percentage))
         
         print("\n>> Top", show_max, "AS Path:Prefixes")
         for x in range(0, min(show_max, len(top_as_paths_prefixes))):

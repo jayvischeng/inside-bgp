@@ -100,7 +100,7 @@ def main():
     plt.grid(True, which='major')
     plt.title(city.title())
     #plt.show()
-    fig.savefig('foo.png', bbox_inches='tight')
+    fig.savefig('graph.png', bbox_inches='tight')
     
 if __name__ == '__main__':
     main()

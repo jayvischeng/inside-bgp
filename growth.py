@@ -6,6 +6,8 @@ import subprocess
 import glob
 import os
 from collections import defaultdict
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from numpy.random import normal
 import numpy
@@ -67,38 +69,39 @@ def main():
         percentage = data_end[sorted_differences[x][0]]*(100/data_start[sorted_differences[x][0]])
         print("%d: %s (+%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
     
-
-    
-    not_in_end = 0
+    start_only = 0
     for key in data_start:
         if data_start[key] == data_end[key]:
-            not_in_end += 1
+            start_only += 1
     
-    not_in_start = 0
+    end_only = 0
     for key in data_end:
         if data_start[key] == 0:
-            not_in_start += 1
+            end_only += 1
     
-    print("\n>> Not in end set: %d" % not_in_end)
-    print(">> Not in start set: %d" % not_in_start)
+    print("")
+    print(">> Only in start set: %d" % start_only)
+    print(">> Only in end set:   %d" % end_only)
     
-    in_both = 0
-    in_both_updates_start = 0
-    in_both_updates_end = 0
+    core = 0
+    core_updates_start = 0
+    core_updates_end = 0
     for key in data_end:
         if data_start[key] != data_end[key] and data_start[key] != 0:
-            in_both += 1
-            in_both_updates_start += data_start[key]
-            in_both_updates_end += data_end[key] - data_start[key]
-            
-    print("\n>> Amount of AS in both: %d" % in_both)
-    print(">> Amount of AS in start: %d" % (len(data_start)-not_in_start))
-    print(">> Amount of AS in end: %d" % (len(data_end)-not_in_end))
+            core += 1
+            core_updates_start += data_start[key]
+            core_updates_end += data_end[key] - data_start[key]
     
-    print("\n>> Amount of intersected updates start: %d" % in_both_updates_start)
-    print(">> Amount of intersected updates end: %d" % in_both_updates_end)
-    percentage = in_both_updates_end*(100/in_both_updates_start)
-    print(">> Growth: %d (%.2f%%)" % ((in_both_updates_end - in_both_updates_start), percentage))
+    print("")
+    print(">> Amount of AS in both:  %d" % core)
+    print(">> Amount of AS in start: %d" % (len(data_start)-end_only))
+    print(">> Amount of AS in end:   %d" % (len(data_end)-start_only))
+    
+    print("")
+    print(">> Amount of core updates start: %d" % core_updates_start)
+    print(">> Amount of core updates end:   %d" % core_updates_end)
+    percentage = core_updates_end*(100/core_updates_start)
+    print(">> Difference:                   %d (%.2f%%)" % ((core_updates_end - core_updates_start), percentage))
     
     differences_list = []
     for element in sorted_differences:
@@ -110,7 +113,8 @@ def main():
     plt.yscale('log')
     plt.plot(differences_list)
     plt.grid(True)
-    plt.show()
+    #plt.show()
+    plt.savefig('growth.png', bbox_inches='tight')
     
 if __name__ == '__main__':
     main()
