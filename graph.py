@@ -66,11 +66,11 @@ def main():
     
     dates = []
     for i in range(start_date,end_date+1):
-        dates.append("01-06-%d" % i)
-        for j in range(1, 14):
+        dates.append("01-01-%d" % i)
+        for j in range(1, 30):
             dates.append("")
-        dates.append("15-06-%d" % i)
-        for j in range(15, 31):
+        dates.append("01-02-%d" % i)
+        for j in range(1, 28):
             dates.append("")
     
     fig = plt.figure()
