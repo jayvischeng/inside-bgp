@@ -24,8 +24,8 @@ def main():
     
     city = "stockholm"
     graph_type = "origin_announcement" # prefix as_path_prefix as_path origin_announcement
-    start_date = 2007
-    end_date = 2013
+    start_year = 2007
+    end_year = 2009
     
     if graph_type == "prefix":
         display = ['']
@@ -43,8 +43,9 @@ def main():
     for element in display:
         top[element] = False
     
-    for date in glob.glob(city+"/graph_data/2007/*.graph"):
-        filenames.append(date)
+    for year in range(start_year, end_year+1):
+        for date in glob.glob(city+"/graph_data/"+x+"/*.graph"):
+            filenames.append(date)
     filenames.sort()
     
     for filename in filenames:
@@ -65,11 +66,11 @@ def main():
             top[element] = False
     
     dates = []
-    for i in range(start_date,end_date+1):
-        dates.append("01-01-%d" % i)
+    for year in range(start_year, end_year+1):
+        dates.append("01-01-%d" % year)
         for j in range(1, 30):
             dates.append("")
-        dates.append("01-02-%d" % i)
+        dates.append("01-02-%d" % year)
         for j in range(1, 28):
             dates.append("")
     
