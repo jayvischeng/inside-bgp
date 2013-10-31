@@ -71,8 +71,8 @@ def main():
         for j in range(15, 31):
             dates.append("")
     
-    fig = plt.figure()
-    ax = fig.add_subplot(1,1,1)
+    #fig = plt.figure()
+    ax = plt.add_subplot(1,1,1)
     ax.set_xticks(range(len(dates)))
     ax.xaxis.set_ticklabels(dates)
     
@@ -83,7 +83,6 @@ def main():
         val = list(map(int, val))
         cc = np.corrcoef(total_announcements, val)
         cc = cc[0][1]
-        #if cc > 0.83:
         print("AS: %s\tCC: %s" % (key, cc))
         ax.plot(val, label=key)
     
@@ -98,7 +97,7 @@ def main():
     plt.grid(True, which='major')
     plt.title(city.title())
     #plt.show()
-    savefig('foo.png', bbox_inches='tight')
+    plt.savefig('foo.png', bbox_inches='tight')
     
 if __name__ == '__main__':
     main()
