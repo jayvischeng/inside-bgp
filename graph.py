@@ -37,13 +37,13 @@ def main():
         display = ['']
         graph_type_total = "total_as_paths"
     elif graph_type == "origin_announcement":
-        display = ['2386', '9829', '6389']
+        display = ['8151', '8452']
         graph_type_total = "total_origin_announcements"
     
     for element in display:
         top[element] = False
     
-    for date in glob.glob("*.graph"):
+    for date in glob.glob(city+"/graph_data/2007/*.graph"):
         filenames.append(date)
     filenames.sort()
     
