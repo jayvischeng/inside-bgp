@@ -7,6 +7,8 @@ import subprocess
 import glob
 import os
 import numpy as np
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
@@ -71,8 +73,8 @@ def main():
         for j in range(15, 31):
             dates.append("")
     
-    #fig = plt.figure()
-    ax = plt.add_subplot(1,1,1)
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
     ax.set_xticks(range(len(dates)))
     ax.xaxis.set_ticklabels(dates)
     
@@ -97,7 +99,7 @@ def main():
     plt.grid(True, which='major')
     plt.title(city.title())
     #plt.show()
-    plt.savefig('foo.png', bbox_inches='tight')
+    fig.savefig('foo.png', bbox_inches='tight')
     
 if __name__ == '__main__':
     main()
