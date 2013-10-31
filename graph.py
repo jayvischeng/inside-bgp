@@ -41,7 +41,7 @@ def main():
     for element in display:
         top[element] = False
     
-    for date in glob.glob(city+"/graph_data/*.graph"):
+    for date in glob.glob("*.graph"):
         filenames.append(date)
     filenames.sort()
     
