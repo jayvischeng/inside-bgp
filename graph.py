@@ -44,7 +44,7 @@ def main():
         top[element] = False
     
     for year in range(start_year, end_year+1):
-        for date in glob.glob(city+"/graph_data/"+year+"/*.graph"):
+        for date in glob.glob(city+"/graph_data/"+str(year)+"/*.graph"):
             filenames.append(date)
     filenames.sort()
     
