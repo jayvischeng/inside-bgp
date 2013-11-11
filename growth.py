@@ -47,7 +47,6 @@ def main():
                         if fields[0] == counter:
                             if directory == directories[0]:
                                 data_start[fields[1]] += int(fields[2])
-                                data_end[fields[1]] += int(fields[2])
                             elif directory == directories[1]:
                                 data_end[fields[1]] += int(fields[2])
                     input_file.close()
@@ -55,7 +54,7 @@ def main():
     for key, value in data_start.items():
         difference = data_end[key] - value
         percentage = data_end[key]*(100/value)
-        print("%s: %s -> %s (%s, %.2f%%)" % (key, value, data_end[key], difference, percentage))
+        #print("%s: %s -> %s (%s, %.2f%%)" % (key, value, data_end[key], difference, percentage))
         differences[key] = difference
         #print(differences[key])
     
@@ -67,36 +66,56 @@ def main():
     print("\n>> Bottom 10 Rising")
     for x in range(len(sorted_differences)-10, len(sorted_differences)):
         percentage = data_end[sorted_differences[x][0]]*(100/data_start[sorted_differences[x][0]])
-        print("%d: %s (+%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
+        print("%d: %s (%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
     
-    start_only = 0
+    only_start = 0
+    updates_start = 0
+    ipv6_start = 0
+    ipv6_updates_start = 0
     for key in data_start:
-        if data_start[key] == data_end[key]:
-            start_only += 1
+        updates_start += data_start[key]
+        if ":" in key:
+            ipv6_start += 1
+            ipv6_updates_start += data_start[key]
+        if data_end[key] == 0:
+            only_start += 1
     
-    end_only = 0
+    only_end = 0
+    updates_end = 0
+    ipv6_end = 0
+    ipv6_updates_end = 0
     for key in data_end:
+        updates_end += data_end[key]
+        if ":" in key:
+            ipv6_end += 1
+            ipv6_updates_end += data_end[key]
         if data_start[key] == 0:
-            end_only += 1
+            only_end += 1
     
     print("")
-    print(">> Only in start set: %d" % start_only)
-    print(">> Only in end set:   %d" % end_only)
+    print(">> Only in start set: %d" % only_start)
+    print(">> Only in end set:   %d" % only_end)
     
     core = 0
     core_updates_start = 0
     core_updates_end = 0
     for key in data_end:
-        if data_start[key] != data_end[key] and data_start[key] != 0:
+        if data_start[key] != 0 and data_end[key] != 0:
             core += 1
             core_updates_start += data_start[key]
-            core_updates_end += data_end[key] - data_start[key]
+            core_updates_end += data_end[key]
     
     print("")
-    print(">> Amount of AS in both:  %d" % core)
-    print(">> Amount of AS in start: %d" % (len(data_start)-end_only))
-    print(">> Amount of AS in end:   %d" % (len(data_end)-start_only))
+    print(">> Amount of AS in core:  %d" % core)
+    print(">> Amount of AS in start: %d (ipv6: %d)" % (len(data_start)-only_end, ipv6_start))
+    print(">> Amount of AS in end:   %d (ipv6: %d)" % (len(data_end)-only_start, ipv6_end))
     
+    print("")
+    print(">> Amount of updates start:      %d (ipv6: %d)" % (updates_start, ipv6_updates_start))
+    print(">> Amount of updates end:        %d (ipv6: %d)" % (updates_end, ipv6_updates_end))
+    percentage = updates_end*(100/updates_start)
+    print(">> Difference:                   %d (%.2f%%)" % ((updates_end - updates_start), percentage))
+
     print("")
     print(">> Amount of core updates start: %d" % core_updates_start)
     print(">> Amount of core updates end:   %d" % core_updates_end)
@@ -110,7 +129,7 @@ def main():
     plt.title("AS Growth Distribution")
     plt.xlabel("Amount of AS")
     plt.ylabel("Growth")
-    plt.yscale('log')
+    plt.yscale('symlog')
     plt.plot(differences_list)
     plt.grid(True)
     #plt.show()

@@ -97,7 +97,7 @@ def main():
                 for x in range(0, top_n):
                     output_file.write("as_path|%s|%s\n" % (top_as_paths[x][0], top_as_paths[x][1]))
                 output_file.write("total_as_paths|%s\n" % sum(as_paths.values()))
-                for x in range(0, top_n):
+                for x in range(0, len(top_prefixes)):
                     output_file.write("prefix|%s|%s\n" % (top_prefixes[x][0], top_prefixes[x][1]))
                 output_file.write("total_prefixes|%s\n" % sum(prefixes.values()))
                 for x in range(0, top_n):

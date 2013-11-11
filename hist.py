@@ -6,6 +6,8 @@ import subprocess
 import glob
 import os
 from collections import defaultdict
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from numpy.random import normal
 import numpy
@@ -15,8 +17,8 @@ def main():
     origins_counter = defaultdict(int)
     enc='iso-8859-15'
     
-    counter = "origin_announcement" # origin_announcement prefix as_path
-    measurement = "updates" # days updates
+    counter = "prefix" # origin_announcement prefix as_path
+    measurement = "days" # days updates
     
     file_counter = 0
     directories = []
@@ -82,7 +84,8 @@ def main():
         plt.yscale('log')
     plt.plot(histlist)
     plt.grid(True)
-    plt.show()
+    #plt.show()
+    plt.savefig('hist.png', bbox_inches='tight')
 
 if __name__ == '__main__':
     main()
