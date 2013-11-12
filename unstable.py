@@ -13,7 +13,7 @@ from numpy.random import normal
 import numpy
 
 def main():
-    unstable_prefixes = defaultdict(list)
+    unstable_prefixes_days = defaultdict(list)
     enc='iso-8859-15'
     
     counter = "prefix"
@@ -43,18 +43,17 @@ def main():
                     for line in input_file:
                         fields = line.strip().split("|")
                         if fields[0] == counter:
-                            unstable_prefixes[update_file].append((fields[1]))
+                            unstable_prefixes_days[update_file].append((fields[1]))
                     input_file.close()
 
-        
     print(">> Unstable prefixes per day")
-    total_unpref_start = 0
-    total_start = 0
-    for x in unstable_prefixes_start:
-        print("%d" % len(unstable_prefixes_start[x]), end=', ')
-        total_unpref_start += len(unstable_prefixes_start[x])
-        total_start += 1
-    print("\n>> Average prefixes/day start: %d" % (total_unpref_start/total_start))
+    total_prefixes = 0
+    total_days = 0
+    for x in unstable_prefixes_days:
+        print("%d" % len(unstable_prefixes_days[x]), end=', ')
+        total_prefixes += len(unstable_prefixes[x])
+        total_days += 1
+    print("\n>> Average prefixes/day: %d" % (total_prefixes/total_days))
     
     plt.title("Prefix Instability")
     plt.xlabel("Year")
