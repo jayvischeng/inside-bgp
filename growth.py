@@ -60,25 +60,25 @@ def main():
     total_unpref_start = 0
     total_start = 0
     for x in unstable_prefixes_start:
-        print("%d, " % len(unstable_prefixes_start[x]), end='')
+        print("%d" % len(unstable_prefixes_start[x]), end=', ')
         total_unpref_start += len(unstable_prefixes_start[x])
         total_start += 1
+    print("")
     print(">> Average prefixes/day start: %d" % (total_unpref_start/total_start))
 
     total_unpref_end = 0
     total_end = 0
     for y in unstable_prefixes_end:
-        print(len(unstable_prefixes_end[y]))
+        pprint("%d" % len(unstable_prefixes_end[x]), end=', ')
         total_unpref_end += len(unstable_prefixes_end[y])
         total_end += 1
+    print("")
     print(">> Average prefixes/day end:   %d" % (total_unpref_end/total_end))
 
     for key, value in data_start.items():
         difference = data_end[key] - value
         percentage = data_end[key]*(100/value)
-        #print("%s: %s -> %s (%s, %.2f%%)" % (key, value, data_end[key], difference, percentage))
         differences[key] = difference
-        #print(differences[key])
     
     sorted_differences = sorted(differences.items(), key=lambda x:x[1], reverse=True)
     print("\n>> Top 10 Rising")
