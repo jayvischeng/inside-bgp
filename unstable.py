@@ -51,7 +51,7 @@ def main():
     total_days = 0
     for x in unstable_prefixes_days:
         print("%d" % len(unstable_prefixes_days[x]), end=', ')
-        total_prefixes += len(unstable_prefixes[x])
+        total_prefixes += len(unstable_prefixes_days[x])
         total_days += 1
     print("\n>> Average prefixes/day: %d" % (total_prefixes/total_days))
     
