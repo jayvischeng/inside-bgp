@@ -57,6 +57,20 @@ def main():
         total_days += 1
     print("\n>> Average prefixes/day: %d" % (total_prefixes/total_days))
     
+    dates = []
+    for year in range(start_year, end_year+1):
+        dates.append("01-01-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
+        dates.append("01-02-%d" % year)
+        for j in range(1, 28):
+            dates.append("")
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    ax.set_xticks(range(len(dates)))
+    ax.xaxis.set_ticklabels(dates)
+    
     plt.title("Prefix Instability")
     plt.xlabel("Year")
     plt.ylabel("Amount of prefixes")
