@@ -49,8 +49,10 @@ def main():
     print(">> Unstable prefixes per day")
     total_prefixes = 0
     total_days = 0
+    plot_data = []
     for x in unstable_prefixes_days:
         print("%d" % len(unstable_prefixes_days[x]), end=', ')
+        plot_data.append(len(unstable_prefixes_days[x]))
         total_prefixes += len(unstable_prefixes_days[x])
         total_days += 1
     print("\n>> Average prefixes/day: %d" % (total_prefixes/total_days))
@@ -59,7 +61,7 @@ def main():
     plt.xlabel("Year")
     plt.ylabel("Amount of prefixes")
     plt.yscale('symlog')
-    plt.plot(unstable_prefixes)
+    plt.plot(plot_data)
     plt.grid(True)
     #plt.show()
     plt.savefig('unpref.png', bbox_inches='tight')
