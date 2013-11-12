@@ -27,7 +27,7 @@ def main():
     as_paths_prefixes_counter = defaultdict(int)
     
     file_counter = 0
-    show_max = 10
+    show_max = 15
     directories = []
     enc='iso-8859-15'
     
@@ -117,8 +117,6 @@ def main():
             print("%02d. AS: %s\tAmount: %s (%.2f%%)" % (x+1, top_origin_announcements[x][0], top_origin_announcements[x][1], percentage), end='\t\t')
             percentage = (int(top_origins_counter[x][1])/file_counter)*100
             print("%02d. AS: %s Days: %s (%.2f%%)" % (x+1, top_origins_counter[x][0], top_origins_counter[x][1], percentage))
-            #percentage = (100/sum(origin_announcements.values()))*int(origin_announcements[top_origins_counter[x][0]])
-            #print("Amount: %s (%.2f%%)" % (origin_announcements[top_origins_counter[x][0]], percentage))
         
         print("\n>> Top", show_max, "AS Paths")
         for x in range(0, min(show_max, len(top_as_paths))):

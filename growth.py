@@ -16,9 +16,11 @@ def main():
     data_start = defaultdict(int)
     data_end = defaultdict(int)
     differences = defaultdict(int)
+    unstable_prefixes_start = defaultdict(list)
+    unstable_prefixes_end = defaultdict(list)
     enc='iso-8859-15'
     
-    counter = "origin_announcement" # origin_announcement prefix as_path
+    counter = "prefix" # origin_announcement prefix as_path
     
     file_counter = 0
     directories = []
@@ -47,10 +49,30 @@ def main():
                         if fields[0] == counter:
                             if directory == directories[0]:
                                 data_start[fields[1]] += int(fields[2])
+                                unstable_prefixes_start[update_file].append((fields[1]))
                             elif directory == directories[1]:
                                 data_end[fields[1]] += int(fields[2])
+                                unstable_prefixes_end[update_file].append((fields[1]))
                     input_file.close()
-    
+
+    print("")
+
+    total_unpref_start = 0
+    total_start = 0
+    for x in unstable_prefixes_start:
+        print("%d, " % len(unstable_prefixes_start[x]), end='')
+        total_unpref_start += len(unstable_prefixes_start[x])
+        total_start += 1
+    print(">> Average prefixes/day start: %d" % (total_unpref_start/total_start))
+
+    total_unpref_end = 0
+    total_end = 0
+    for y in unstable_prefixes_end:
+        print(len(unstable_prefixes_end[y]))
+        total_unpref_end += len(unstable_prefixes_end[y])
+        total_end += 1
+    print(">> Average prefixes/day end:   %d" % (total_unpref_end/total_end))
+
     for key, value in data_start.items():
         difference = data_end[key] - value
         percentage = data_end[key]*(100/value)
@@ -106,9 +128,9 @@ def main():
             core_updates_end += data_end[key]
     
     print("")
-    print(">> Amount of AS in core:  %d" % core)
-    print(">> Amount of AS in start: %d (ipv6: %d)" % (len(data_start)-only_end, ipv6_start))
-    print(">> Amount of AS in end:   %d (ipv6: %d)" % (len(data_end)-only_start, ipv6_end))
+    print(">> Amount of prefixes in core:  %d" % core)
+    print(">> Amount of prefixes in start: %d (ipv6: %d)" % (len(data_start)-only_end, ipv6_start))
+    print(">> Amount of prefixes in end:   %d (ipv6: %d)" % (len(data_end)-only_start, ipv6_end))
     
     print("")
     print(">> Amount of updates start:      %d (ipv6: %d)" % (updates_start, ipv6_updates_start))
