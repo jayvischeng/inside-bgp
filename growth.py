@@ -55,6 +55,23 @@ def main():
                                 unstable_prefixes_end[update_file].append((fields[1]))
                     input_file.close()
 
+    for key, value in data_start.items():
+        difference = data_end[key] - value
+        percentage = data_end[key]*(100/value)
+        differences[key] = difference
+    
+    print("")
+    sorted_differences = sorted(differences.items(), key=lambda x:x[1], reverse=True)
+    print(">> Top 10 Rising")
+    for x in range(0, 10):
+        percentage = data_end[sorted_differences[x][0]]*(100/data_start[sorted_differences[x][0]])
+        print("%d: %s (+%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
+    print("")
+    print(">> Bottom 10 Rising")
+    for x in range(len(sorted_differences)-10, len(sorted_differences)):
+        percentage = data_end[sorted_differences[x][0]]*(100/data_start[sorted_differences[x][0]])
+        print("%d: %s (%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
+    
     print("")
 
     total_unpref_start = 0
@@ -69,26 +86,11 @@ def main():
     total_unpref_end = 0
     total_end = 0
     for y in unstable_prefixes_end:
-        pprint("%d" % len(unstable_prefixes_end[x]), end=', ')
+        print("%d" % len(unstable_prefixes_end[x]), end=', ')
         total_unpref_end += len(unstable_prefixes_end[y])
         total_end += 1
     print("")
     print(">> Average prefixes/day end:   %d" % (total_unpref_end/total_end))
-
-    for key, value in data_start.items():
-        difference = data_end[key] - value
-        percentage = data_end[key]*(100/value)
-        differences[key] = difference
-    
-    sorted_differences = sorted(differences.items(), key=lambda x:x[1], reverse=True)
-    print("\n>> Top 10 Rising")
-    for x in range(0, 10):
-        percentage = data_end[sorted_differences[x][0]]*(100/data_start[sorted_differences[x][0]])
-        print("%d: %s (+%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
-    print("\n>> Bottom 10 Rising")
-    for x in range(len(sorted_differences)-10, len(sorted_differences)):
-        percentage = data_end[sorted_differences[x][0]]*(100/data_start[sorted_differences[x][0]])
-        print("%d: %s (%s, %.2f%%) " % (x+1, sorted_differences[x][0], sorted_differences[x][1], percentage))
     
     only_start = 0
     updates_start = 0
