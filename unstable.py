@@ -78,7 +78,7 @@ def main():
     plt.plot(plot_data)
     plt.grid(True)
     #plt.show()
-    plt.savefig('unpref.png', bbox_inches='tight')
+    fig.savefig('unpref.png', bbox_inches='tight')
     
 if __name__ == '__main__':
     main()
