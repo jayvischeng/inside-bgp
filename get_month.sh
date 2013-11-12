@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+test
 CITY="stockholm"
 YEAR="2013"
 MONTH="02"
