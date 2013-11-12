@@ -85,9 +85,9 @@ def main():
 
     total_unpref_end = 0
     total_end = 0
-    for y in unstable_prefixes_end:
+    for x in unstable_prefixes_end:
         print("%d" % len(unstable_prefixes_end[x]), end=', ')
-        total_unpref_end += len(unstable_prefixes_end[y])
+        total_unpref_end += len(unstable_prefixes_end[x])
         total_end += 1
     print("")
     print(">> Average prefixes/day end:   %d" % (total_unpref_end/total_end))
