@@ -20,7 +20,7 @@ def main():
     unstable_prefixes_end = defaultdict(list)
     enc='iso-8859-15'
     
-    counter = "prefix" # origin_announcement prefix as_path
+    counter = "origin_announcement" # origin_announcement prefix as_path
     
     file_counter = 0
     directories = []

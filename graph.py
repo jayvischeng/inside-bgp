@@ -24,8 +24,8 @@ def main():
     filenames = []
     enc='iso-8859-15'
     
-    city = "stockholm"
-    graph_type = "prefix" # prefix as_path_prefix as_path origin_announcement
+    city = "amsterdam"
+    graph_type = "origin_announcement" # prefix as_path_prefix as_path origin_announcement
     start_year = 2007
     end_year = 2013 
     
@@ -39,7 +39,7 @@ def main():
         display = ['']
         graph_type_total = "total_as_paths"
     elif graph_type == "origin_announcement":
-        display = ['2119']
+        display = ['3549', '3257', '12880']
         graph_type_total = "total_origin_announcements"
     
     for element in display:
