@@ -16,7 +16,7 @@ from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
 from collections import defaultdict
 
 def main():
-    top = defaultdict(list)
+    show = defaultdict(list)
     total_announcements = []
     total_ipv4 = []
     total_ipv6 = []
@@ -26,7 +26,7 @@ def main():
     
     city = "amsterdam"
     graph_type = "origin_announcement" # prefix as_path_prefix as_path origin_announcement
-    start_year = 2007
+    start_year = 2013
     end_year = 2013 
     
     if graph_type == "prefix":
@@ -42,14 +42,12 @@ def main():
         display = ['3549', '3257', '12880']
         graph_type_total = "total_origin_announcements"
     
-    for element in display:
-        top[element] = False
-    
     for year in range(start_year, end_year+1):
         for date in glob.glob(city+"/graph_data/"+str(year)+"/*.graph"):
             filenames.append(date)
     filenames.sort()
     
+    days = 0
     for filename in filenames:
         input_file = open(filename, "r", encoding=enc)
         print(filename)
@@ -58,22 +56,22 @@ def main():
         for line in input_file:
             fields = line.strip().split("|")
             if fields[0] == graph_type:
-                if fields[1] in top:
-                    announcements[fields[1]].append(fields[2])
-                    top[fields[1]] = True
-                if ":" in fields[1]:
-                    ipv6 += int(fields[2])
-                else:
-                    ipv4 += int(fields[2])
+                if len(announcements[fields[1]]) == 0:
+                    announcements[fields[1]] = [0] * 174
+                        
+                announcements[fields[1]][days] = fields[2]
+                
+                if (graph_type == "prefix"):
+                    if ":" in fields[1]:
+                        ipv6 += int(fields[2])
+                    else:
+                        ipv4 += int(fields[2])
             if fields[0] == graph_type_total:
                 total_announcements.append(fields[1])
         total_ipv4.append(ipv4)
         total_ipv6.append(ipv6)
         input_file.close()
-        for element in display:
-            if top[element] == False:
-                announcements[element].append('0')
-            top[element] = False
+        days += 1
     
     dates = []
     for year in range(start_year, end_year+1):
@@ -90,20 +88,38 @@ def main():
     ax.xaxis.set_ticklabels(dates)
     
     total_announcements = list(map(int, total_announcements))
-    total_ipv4 = list(map(int, total_ipv4))
-    total_ipv6 = list(map(int, total_ipv6))
     ax.plot(total_announcements, label=('Total'))
-    ax.plot(total_ipv4, label=('ipv4'))
-    ax.plot(total_ipv6, label=('ipv6'))
     
+    if (graph_type ==  "prefix"):
+        total_ipv4 = list(map(int, total_ipv4))
+        total_ipv6 = list(map(int, total_ipv6))
+        ax.plot(total_ipv4, label=('ipv4'))
+        ax.plot(total_ipv6, label=('ipv6'))
+    
+    full_time = [0] * days
+    full_time_amount = 0
+    part_time = [0] * days
+    part_time_amount = 0
     for key, val in announcements.items():
         val = list(map(int, val))
-        cc = np.corrcoef(total_announcements, val)
-        cc = cc[0][1]
-        print("AS: %s\tCC: %s" % (key, cc))
-        ax.plot(val, label=key)
+        #cc = np.corrcoef(total_announcements, val)
+        #cc = cc[0][1]
+        #print("AS: %s\tCC: %s" % (key, cc))
+        if 0 not in val or val.count(0) < 6:
+            full_time_amount += 1
+            full_time = [a+b for a,b in zip(full_time, val)]
+        else:
+            part_time_amount += 1
+            part_time = [a+b for a,b in zip(part_time, val)]
     
-    legend = plt.legend(loc='best', fancybox=True)
+            
+    ax.plot(full_time, label="full time talking")
+    ax.plot(part_time, label="part time talking")
+    
+    print("amount of as always talking:", full_time_amount)
+    print("amount of as sometimes talking:", part_time_amount)
+    
+    legend = plt.legend(loc='upper right', fancybox=True)
     legend.get_frame().set_alpha(0.5)
     for label in legend.get_lines():
         label.set_linewidth(4.0)
@@ -115,7 +131,7 @@ def main():
     plt.grid(True, which='major')
     plt.title(city.title())
     #plt.show()
-    fig.savefig('graph.png', bbox_inches='tight')
+    fig.savefig('graph.png', bbox_inches='tight', dpi=200)
     
 if __name__ == '__main__':
     main()

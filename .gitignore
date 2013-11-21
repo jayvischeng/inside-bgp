@@ -5,3 +5,6 @@
 *.aux
 *.log
 *.gz
+*.parsed
+*.gz
+*.graph
