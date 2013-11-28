@@ -17,8 +17,8 @@ def main():
     origins_counter = defaultdict(int)
     enc='iso-8859-15'
     
-    counter = "prefix" # origin_announcement prefix as_path
-    measurement = "days" # days updates
+    counter = "origin_announcement" # origin_announcement prefix as_path
+    measurement = "updates" # days updates
     
     file_counter = 0
     directories = []

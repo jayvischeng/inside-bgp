@@ -81,6 +81,18 @@ def main():
         dates.append("01-02-%d" % year)
         for j in range(1, 28):
             dates.append("")
+        dates.append("01-03-%d" % year)
+        for j in range(1, 29):
+            dates.append("")
+        dates.append("01-04-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
+        dates.append("01-05-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
+        dates.append("01-06-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
     
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
@@ -113,8 +125,8 @@ def main():
             part_time = [a+b for a,b in zip(part_time, val)]
     
             
-    ax.plot(full_time, label="full time talking")
-    ax.plot(part_time, label="part time talking")
+    ax.plot(full_time, label="Full Time Talkers")
+    #ax.plot(part_time, label="part time talking")
     
     print("amount of as always talking:", full_time_amount)
     print("amount of as sometimes talking:", part_time_amount)

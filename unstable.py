@@ -65,6 +65,21 @@ def main():
         dates.append("01-01-%d" % year)
         for j in range(1, 30):
             dates.append("")
+        dates.append("01-02-%d" % year)
+        for j in range(1, 28):
+            dates.append("")
+        dates.append("01-03-%d" % year)
+        for j in range(1, 29):
+            dates.append("")
+        dates.append("01-04-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
+        dates.append("01-05-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
+        dates.append("01-06-%d" % year)
+        for j in range(1, 30):
+            dates.append("")
     
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
@@ -74,9 +89,9 @@ def main():
     plt.title("Prefix Instability")
     plt.xlabel("Month")
     plt.ylabel("Amount of prefixes")
-    #plt.yscale('symlog')
+    plt.yscale('symlog')
     plt.plot(plot_data)
-    #plt.grid(True)
+    plt.grid(True)
     #plt.show()
     fig.savefig('unpref.png', bbox_inches='tight', dpi=200)
     

@@ -51,12 +51,14 @@ def main():
                         for i in range(0, len(fields)):
                             if not fields[i].isprintable():
                                 printable = False
-                        if printable == True:
+                        if printable == True and len(fields) > 4:
                             if fields[2] == "A" and len(fields) > 6:
+                                #as_path = fields[6].strip().split(" ")
                                 timestamp = int(fields[1])
-                                if len(timestamps[fields[5]]) == 0:
-                                    timestamps[fields[5]].append(timestamp)
-                                timestamps[fields[5]].append(timestamp - timestamps[fields[5]][0])
+                                measurement = fields[6]
+                                if len(timestamps[measurement]) == 0:
+                                    timestamps[measurement].append(timestamp)
+                                timestamps[measurement].append(timestamp - timestamps[measurement][0])
                     input_file.close()
 
     #timestamps.pop(0)
@@ -68,15 +70,15 @@ def main():
     for prefix in timestamps:
         # print("")
         # print("timestamps:", timestamps[x])
-        for index, timestamp in enumerate(timestamps[prefix]):
-            intervals[prefix].append(timestamp - timestamps[prefix][max(0, index-1)])
+        # for index, timestamp in enumerate(timestamps[prefix]):
+            # intervals[prefix].append(timestamp - timestamps[prefix][max(0, index-1)])
         # print("intervals:", sorted(intervals[x]))
         # print("amount of announcements:", len(intervals[x]))
         # print("mean interval:", numpy.mean(intervals[x]))
         # print("median interval:", numpy.median(intervals[x]))
         # print("std interval:", numpy.std(intervals[x]))
         # print("var interval:", numpy.var(intervals[x]))
-        data_point = (numpy.var(intervals[prefix]), len(intervals[prefix]))
+        data_point = (numpy.var(timestamps[prefix]), len(timestamps[prefix]))
         #print(">>", prefix, data_point)
         data.append(data_point)
 
@@ -88,13 +90,13 @@ def main():
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     plt.title("Prefix Clustering")
-    plt.xlabel("Interval Variance")
+    plt.xlabel("Timestamp Variance")
     plt.ylabel("Amount of Announcements")
-    plt.xscale('log')
+    #plt.xscale('log')
     plt.yscale('log')
     x = tuple(x[0] for x in data)
     y = tuple(y[1] for y in data)
-    plt.plot(x, y, 'r.')
+    plt.plot(x, y, 'r,')
     fig.savefig('cluster.png', bbox_inches='tight', dpi=200)
 
 if __name__ == '__main__':
