@@ -63,29 +63,12 @@ def main():
                                 timestamps[data_type].append(timestamp)
                     input_file.close()
 
-    for key in timestamps:
-        timestamps[key] = sorted(timestamps[key])
+    # for key in timestamps:
+    #     timestamps[key] = sorted(timestamps[key])
     
-    data_red = []
-    data_green = []
+    data = []
 
     seconds = n_files * 5 * 60
-
-    for prefix in timestamps:
-        amount = len(timestamps[prefix])
-        timestamp_var = numpy.var(timestamps[prefix])
-        data_point = (timestamp_var, amount)
-        if timestamps[prefix][-1] - timestamps[prefix][0] > (0.98*seconds):
-            data_red.append(data_point)
-        else:
-            data_green.append(data_point)
-
-    n_red = len(data_red)
-    n_green = len(data_green)
-    total = n_red + n_green
-    print("Red:   %d (%.2f%%)" % (n_red, 100*n_red/total))
-    print("Green: %d (%.2f%%)" % (n_green, 100*n_green/total))
-    print("Total: %d" % total)
 
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
@@ -94,12 +77,31 @@ def main():
     plt.ylabel("Amount of Announcements")
     # plt.xscale('log')
     plt.yscale('symlog')
-    x_red = tuple(x[0] for x in data_red)
-    y_red = tuple(y[1] for y in data_red)
-    plt.plot(x_red, y_red, 'r,')
-    x_green = tuple(x[0] for x in data_green)
-    y_green = tuple(y[1] for y in data_green)
-    plt.plot(x_green, y_green, 'g,')
+
+    for prefix in timestamps:
+        amount = len(timestamps[prefix])
+        timestamp_var = min(1600000000, numpy.var(timestamps[prefix]))
+        time_delta = max(timestamps[prefix]) - min(timestamps[prefix])
+        color = (time_delta/seconds, 0.0, 0.0)
+        # print(color)
+        # plt.plot(timestamp_var, amount, '.', color=color)
+        data_point = (timestamp_var, amount, color)
+        data.append(data_point)
+
+    # n_red = len(data_red)
+    # n_green = len(data_green)
+    # total = n_red + n_green
+    # print("Red:   %d (%.2f%%)" % (n_red, 100*n_red/total))
+    # print("Green: %d (%.2f%%)" % (n_green, 100*n_green/total))
+    # print("Total: %d" % total)
+
+    x_coords = tuple(x[0] for x in data)
+    y_coords = tuple(y[1] for y in data)
+    colors = tuple(z[2] for z in data)
+    # print(colors)
+    plt.scatter(x_coords, y_coords, color=colors, marker=',', s=0.1)
+    plt.xlim(0,1600000000)
+    plt.ylim(0,1000000)
     fig.savefig('cluster.png', bbox_inches='tight', dpi=200)
 
 if __name__ == '__main__':
