@@ -35,6 +35,9 @@ def main():
             
             path = root.split('/')
             print((len(path) - 1) * '---' , os.path.basename(root))
+
+            output_img = os.path.basename(root)
+
             for update_file in files:
                 if update_file.endswith(".bz2") or update_file.endswith(".gz"):
                     n_files += 1
@@ -93,7 +96,7 @@ def main():
     plt.scatter(x_coords, y_coords, color=colors, marker=',', s=0.01)
     plt.xlim(0,2000000000)
     plt.ylim(0,1000000)
-    fig.savefig('cluster.png', bbox_inches='tight', dpi=200)
+    fig.savefig(output_img, bbox_inches='tight', dpi=200)
 
 if __name__ == '__main__':
     main()
