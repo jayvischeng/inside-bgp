@@ -54,12 +54,9 @@ def main():
                                 printable = False
                         if printable == True and len(fields) > 4:
                             if fields[2] == "A" and len(fields) > 6:
-                                # as_path = fields[6].strip().split(" ")
+                                as_path = fields[6].strip().split(" ")
                                 timestamp = int(fields[1])
-                                data_type = fields[5]
-                                # data_type = as_path[-1]
-                                # if len(timestamps[data_type]) == 0:
-                                    # timestamps[data_type].append(timestamp)
+                                data_type = as_path[-1]
                                 timestamps[data_type].append(timestamp)
                     input_file.close()
 
@@ -83,8 +80,6 @@ def main():
         timestamp_var = numpy.var(timestamps[prefix])
         time_delta = max(timestamps[prefix]) - min(timestamps[prefix])
         time_ratio = time_delta/seconds
-        if time_ratio > 0.95:
-            print(prefix)
         color = (time_ratio, 0.0, time_ratio)
         # print(color)
         # plt.plot(timestamp_var, amount, '.', color=color)
