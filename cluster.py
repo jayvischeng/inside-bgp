@@ -40,10 +40,10 @@ def main():
                     n_files += 1
                     update_file = os.path.join(root,update_file)
                     print(len(path) * '---', update_file)
-                    try:
-                        with open(update_file+".parsed"): pass
-                    except IOError:
-                        subprocess.call(["../libbgpdump-1.4.99.13/bgpdump", "-m", update_file, "-O", update_file+".parsed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    # try:
+                    #     with open(update_file+".parsed"): pass
+                    # except IOError:
+                    #     subprocess.call(["../libbgpdump-1.4.99.13/bgpdump", "-m", update_file, "-O", update_file+".parsed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     input_file = codecs.open(update_file+".parsed", "r", encoding=enc)
                     
                     for message in input_file:
@@ -80,27 +80,23 @@ def main():
 
     for prefix in timestamps:
         amount = len(timestamps[prefix])
-        timestamp_var = min(1600000000, numpy.var(timestamps[prefix]))
+        timestamp_var = numpy.var(timestamps[prefix])
         time_delta = max(timestamps[prefix]) - min(timestamps[prefix])
-        color = (time_delta/seconds, 0.0, 0.0)
+        time_ratio = time_delta/seconds
+        if time_ratio > 0.95:
+            print(prefix)
+        color = (time_ratio, 0.0, time_ratio)
         # print(color)
         # plt.plot(timestamp_var, amount, '.', color=color)
         data_point = (timestamp_var, amount, color)
         data.append(data_point)
 
-    # n_red = len(data_red)
-    # n_green = len(data_green)
-    # total = n_red + n_green
-    # print("Red:   %d (%.2f%%)" % (n_red, 100*n_red/total))
-    # print("Green: %d (%.2f%%)" % (n_green, 100*n_green/total))
-    # print("Total: %d" % total)
-
     x_coords = tuple(x[0] for x in data)
     y_coords = tuple(y[1] for y in data)
     colors = tuple(z[2] for z in data)
     # print(colors)
-    plt.scatter(x_coords, y_coords, color=colors, marker=',', s=0.1)
-    plt.xlim(0,1600000000)
+    plt.scatter(x_coords, y_coords, color=colors, marker=',', s=0.01)
+    plt.xlim(0,2000000000)
     plt.ylim(0,1000000)
     fig.savefig('cluster.png', bbox_inches='tight', dpi=200)
 

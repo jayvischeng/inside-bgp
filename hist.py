@@ -17,7 +17,7 @@ def main():
     origins_counter = defaultdict(int)
     enc='iso-8859-15'
     
-    counter = "origin_announcement" # origin_announcement prefix as_path
+    counter = "prefix" # origin_announcement prefix as_path
     measurement = "updates" # days updates
     
     file_counter = 0
@@ -53,6 +53,8 @@ def main():
     top_origins_counter = sorted(origins_counter.items(), key=lambda x:x[1], reverse=True)
     histlist = []
     
+    print(len(top_origin_announcements))
+
     if any(top_origin_announcements):
         for x in range(0, len(top_origin_announcements)):
             percentage = (100/sum(origin_announcements.values()))*int(top_origin_announcements[x][1])

@@ -23,7 +23,7 @@ def main():
     announcements = defaultdict(list)
     filenames = []
     enc='iso-8859-15'
-    n_files = 60
+    n_files = 10
 
     city = "amsterdam"
     graph_type = "prefix" # prefix as_path_prefix as_path origin_announcement
@@ -110,8 +110,11 @@ def main():
     ax = fig.add_subplot(1,1,1)
     ax.set_xticks(range(len(dates)))
     ax.xaxis.set_ticklabels(dates)
-    
+
     total_announcements = list(map(int, total_announcements))
+    
+    print(total_announcements)
+
     ax.plot(total_announcements, label=('Total'))
     
     # if (graph_type ==  "prefix"):
@@ -125,11 +128,19 @@ def main():
     # part_time = [0] * days
     # part_time_amount = 0
     prefix_count = [0] * n_files
+    full_time_prefix_count = [0] * n_files
+    test_set = [0] * n_files
+    test_set2 = [0] * n_files
     for key, val in announcements.items():
         val = list(map(int, val))
         for day in range(0,days):
             if val[day] != 0:
                 prefix_count[day] += 1
+            if val.count(0) < 2:
+                full_time_prefix_count[day] += 1
+            if val[day] < 30:
+                test_set[day] += val[day]
+                test_set2[day] += 1
 
         #cc = np.corrcoef(total_announcements, val)
         #cc = cc[0][1]
@@ -144,7 +155,11 @@ def main():
     # ax.plot(full_time, label="Full Time Talkers")
     # ax.plot(part_time, label="part time talking")
     print(prefix_count)
+    print(full_time_prefix_count)
     ax.plot(prefix_count, label=('Prefix Count'))
+    # ax.plot(full_time_prefix_count, label=('Full Time Prefixes'))
+    ax.plot(test_set, label=('Test Set'))
+    ax.plot(test_set2, label=('Test Set Count'))
     # print("amount of as always talking:", full_time_amount)
     # print("amount of as sometimes talking:", part_time_amount)
     
