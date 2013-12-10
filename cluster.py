@@ -36,17 +36,17 @@ def main():
             path = root.split('/')
             print((len(path) - 1) * '---' , os.path.basename(root))
 
-            output_img = os.path.basename(root)
+            output_img = os.path.basename(root) + ".png"
 
             for update_file in files:
                 if update_file.endswith(".bz2") or update_file.endswith(".gz"):
                     n_files += 1
                     update_file = os.path.join(root,update_file)
                     print(len(path) * '---', update_file)
-                    # try:
-                    #     with open(update_file+".parsed"): pass
-                    # except IOError:
-                    #     subprocess.call(["../libbgpdump-1.4.99.13/bgpdump", "-m", update_file, "-O", update_file+".parsed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    try:
+                        with open(update_file+".parsed"): pass
+                    except IOError:
+                        subprocess.call(["../libbgpdump-1.4.99.13/bgpdump", "-m", update_file, "-O", update_file+".parsed"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     input_file = codecs.open(update_file+".parsed", "r", encoding=enc)
                     
                     for message in input_file:
@@ -62,12 +62,8 @@ def main():
                                 data_type = as_path[-1]
                                 timestamps[data_type].append(timestamp)
                     input_file.close()
-
-    # for key in timestamps:
-    #     timestamps[key] = sorted(timestamps[key])
     
     data = []
-
     seconds = n_files * 5 * 60
 
     fig = plt.figure()
@@ -84,15 +80,12 @@ def main():
         time_delta = max(timestamps[prefix]) - min(timestamps[prefix])
         time_ratio = time_delta/seconds
         color = (time_ratio, 0.0, time_ratio)
-        # print(color)
-        # plt.plot(timestamp_var, amount, '.', color=color)
         data_point = (timestamp_var, amount, color)
         data.append(data_point)
 
     x_coords = tuple(x[0] for x in data)
     y_coords = tuple(y[1] for y in data)
     colors = tuple(z[2] for z in data)
-    # print(colors)
     plt.scatter(x_coords, y_coords, color=colors, marker=',', s=0.01)
     plt.xlim(0,2000000000)
     plt.ylim(0,1000000)
