@@ -78,7 +78,7 @@ def main():
         amount = len(timestamps[prefix])
         timestamp_var = numpy.var(timestamps[prefix])
         time_delta = max(timestamps[prefix]) - min(timestamps[prefix])
-        time_ratio = time_delta/seconds
+        time_ratio = min(1, time_delta/seconds)
         color = (time_ratio, 0.0, time_ratio)
         data_point = (timestamp_var, amount, color)
         data.append(data_point)
